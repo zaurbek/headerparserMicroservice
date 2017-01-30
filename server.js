@@ -1,10 +1,16 @@
 var express = require('express')
 var app = express()
+var useragent = require('express-useragent');
 
-app.get('/', function (req, res) {
-  res.send('Hello World!')
-})
+app.use(useragent.express());
+app.get('/', function(req, res){
+    res.json({ip: req.ip,
+              language: req.headers["accept-language"].toString().split(',')[0],
+              browser: req.useragent.browser+' '+req.useragent.version,
+              os: req.useragent.os,
+              platform: req.useragent.platform,
+              
+                });
+});
 
-app.listen(8080, function () {
-  console.log('Server listening on port 8080')
-})
+app.listen(process.env.PORT || 8080)
